@@ -4,4 +4,7 @@ from home.models import *
 
 
 admin.site.register(registration)
+admin.site.register(feed)
+admin.site.register(beds)
+
 

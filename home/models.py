@@ -55,3 +55,19 @@ class registration(models.Model):
     def __str__(self):
         return self.full_name
 
+class feed(models.Model):
+    name=models.CharField(max_length=100)
+    email=models.CharField(max_length=100)
+    message=models.CharField(max_length=2000)
+    def __str__(self):
+        return self.name
+class beds(models.Model):
+    Hospital_name = models.CharField(max_length=300)
+    Bed_id=models.CharField(max_length=300,unique=True)
+    Ward_number=models.CharField(max_length=100)
+    Room_number=models.CharField(max_length=100)
+    Bed_type=models.CharField(max_length=300)
+    def __str__(self):
+        return self.Bed_id
+    
+

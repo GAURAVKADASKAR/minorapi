@@ -45,6 +45,26 @@ class profile(APIView):
         else:
             return Response({'status':200,'message':'login required'})
         
+
+class feedback(APIView):
+    def get(self,request):
+        user=feed.objects.all()
+        serializer=feedbackserializer(user,many=True)
+        return Response({'status':200,'message':serializer.data})
+    def post(self,request):
+        serializer=feedbackserializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'status':200,'message':'something went wrrong'})
+        serializer.save()
+        return Response({'status':200,'message':serializer.data})
+
+class viewbeds(APIView):
+    def get(self,request):
+        user=beds.objects.all()
+        serializer=bedsserializer(user,many=True)
+        return Response({'status':200,'message':serializer.data})
+
+    
             
     
     

@@ -42,3 +42,13 @@ class profileserializer(serializers.ModelSerializer):
         model=registration
         fields="__all__"
         
+class feedbackserializer(serializers.ModelSerializer):
+    class Meta:
+        model=feed
+        fields="__all__"
+
+class bedsserializer(serializers.ModelSerializer):
+    class Meta:
+        model=beds
+        fields="__all__"
+        
