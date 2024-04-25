@@ -9,5 +9,8 @@ urlpatterns = [
     path('profile/',profile.as_view()),
     path('feedback/',feedback.as_view()),
     path('viewbeds/',viewbeds.as_view()),
+    path('viewhospital/',viewhospital.as_view()),
+    path('request_for_beds/',requst_for_beds.as_view()),
+    
     path('admin/', admin.site.urls),
 ]

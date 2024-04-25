@@ -52,3 +52,21 @@ class bedsserializer(serializers.ModelSerializer):
         model=beds
         fields="__all__"
         
+class hospitalinfoserializer(serializers.ModelSerializer):
+    class Meta:
+        model=hospitalinfo
+        fields="__all__"
+        def get_photo_url(self,obj):
+            request=self.context.get('request')
+            photo_url=obj.fingerprint.url
+            return request.build_absolute_uri(photo_url)
+class patientrequestserializer(serializers.ModelSerializer):
+    class Meta:
+        model=patient_info
+        fields="__all__"
+class hospital(serializers.ModelSerializer):
+    class Meta:
+        model=hospitalinfo
+        fields="__all__"
+        
+            

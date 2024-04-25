@@ -6,5 +6,6 @@ from home.models import *
 admin.site.register(registration)
 admin.site.register(feed)
 admin.site.register(beds)
-
+admin.site.register(hospitalinfo)
+admin.site.register(patient_info)
 

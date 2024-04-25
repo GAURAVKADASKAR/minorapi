@@ -69,5 +69,38 @@ class beds(models.Model):
     Bed_type=models.CharField(max_length=300)
     def __str__(self):
         return self.Bed_id
+
+class hospitalinfo(models.Model):
+    hospital_name=models.CharField(max_length=300)
+    hospital_image=models.ImageField(upload_to="hospital_images")
+    hospital_address=models.TextField()
+    hospital_details=models.TextField()
+    def __str__(self):
+        return self.hospital_name
+ge=(('Male','Male'),
+     ('Female','Female'),
+     ('Others','Others'))
+class patient_info(models.Model):
+    Hospital_name = models.CharField(max_length=300)
+    Bed_id=models.CharField(max_length=300,unique=True)
+    Ward_number=models.IntegerField()
+    Room_number=models.IntegerField()
+    Disease=models.CharField(max_length=200)
+    Bed_type=models.CharField(max_length=300)
+    patient_name=models.CharField(max_length=200)
+    patient_gender=models.CharField(choices=ge,max_length=300)
+    patient_age=models.PositiveBigIntegerField()
+    address=models.TextField()
+    mobile_number=models.PositiveBigIntegerField()
+    current_medication=models.TextField()
+    allergies=models.TextField()
+    past_surgeries=models.TextField()
+    insurance_policy=models.TextField()
+    Policy_number=models.TextField()
+    special_request=models.TextField()
+    
+
+
+
     
 

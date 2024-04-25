@@ -63,6 +63,23 @@ class viewbeds(APIView):
         user=beds.objects.all()
         serializer=bedsserializer(user,many=True)
         return Response({'status':200,'message':serializer.data})
+class viewhospital(APIView):
+    def get(self,request):
+        user=hospitalinfo.objects.all()
+        serializer=hospitalinfoserializer(user, context={'request':request},
+                                          many=True)
+        return Response({'status':200,'message':serializer.data})
+class requst_for_beds(APIView):
+    def post(self,request):
+        Bed_id=request.data['Bed_id']
+        user=beds.objects.get(Bed_id=Bed_id)
+        serializer=patientrequestserializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'status':200,'message':serializer.errors})
+        serializer.save()
+        user.delete()
+        return Response({'status':200,'message':'your request is sended to the hospital'})
+    
 
     
             
