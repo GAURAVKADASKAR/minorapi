@@ -98,6 +98,9 @@ class patient_info(models.Model):
     insurance_policy=models.TextField()
     Policy_number=models.TextField()
     special_request=models.TextField()
+
+
+
     
 
 

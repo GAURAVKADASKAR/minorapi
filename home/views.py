@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
+from rest_framework.decorators import api_view
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 from home.models import *
 from django.conf import settings
 from home.serializer import *
 from home.models import *
+from rest_framework import filters
+from rest_framework.generics import ListAPIView
 
 
 # Create your views here.
@@ -58,17 +61,9 @@ class feedback(APIView):
         serializer.save()
         return Response({'status':200,'message':serializer.data})
 
-class viewbeds(APIView):
-    def get(self,request):
-        user=beds.objects.all()
-        serializer=bedsserializer(user,many=True)
-        return Response({'status':200,'message':serializer.data})
-class viewhospital(APIView):
-    def get(self,request):
-        user=hospitalinfo.objects.all()
-        serializer=hospitalinfoserializer(user, context={'request':request},
-                                          many=True)
-        return Response({'status':200,'message':serializer.data})
+
+    
+
 class requst_for_beds(APIView):
     def post(self,request):
         Bed_id=request.data['Bed_id']
@@ -79,6 +74,32 @@ class requst_for_beds(APIView):
         serializer.save()
         user.delete()
         return Response({'status':200,'message':'your request is sended to the hospital'})
+class viewbeds(ListAPIView):
+    queryset=beds.objects.all()
+    serializer_class=bedsserializer
+    filter_backends=[filters.SearchFilter]
+    search_fields=['Hospital_name','Bed_id','Ward_number','Room_number','Bed_type']
+class viewhospital(ListAPIView):
+    queryset=hospitalinfo.objects.all()
+    serializer_class=hospitalinfoserializer
+    filter_backends=[filters.SearchFilter]
+    search_fields=['hospital_name','hospital_address','hospital_details']
+
+class viewrequest(ListAPIView):
+    queryset=patient_info.objects.all()
+    serializer_class=patientrequestserializer
+    filter_backends=[filters.SearchFilter]
+    search_fields=['Hospital_name','Bed_id','Ward_number','Room_number','Disease','Bed_type','patient_name','patient_gender',
+                   'patient_age','address','mobile_number','current_medication','allergies','past_surgeries','insurance_policy',
+                   'Policy_number','special_request']
+@api_view(['get'])
+def get_hospital_by_id(request,id):
+    user=hospitalinfo.objects.filter(id=id)
+    serializer=hospitalinfoserializer(user,many=True)
+    return Response({'status':200,'message':serializer.data})
+
+
+
     
 
     
