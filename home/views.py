@@ -99,6 +99,54 @@ def get_hospital_by_id(request,id):
     return Response({'status':200,'message':serializer.data})
 
 
+@api_view(['get'])
+def rejectrequest(request,id):
+        user=patient_info.objects.filter(id=id)
+        serializer=patientrequestserializer(user,many=True)
+        for data in serializer.data:
+              data_serializer=copyserializer(data=data)
+              if data_serializer.is_valid():
+                     data_serializer.save()
+              else:
+                     return Response({'status':200,'message':'somthing is wrrong'})
+        user.delete()
+        return Response({'status':200,'message':'success'})
+@api_view(['get'])
+def selectrequest(request,id):
+        user=patient_info.objects.filter(id=id)
+        serializer=patientrequestserializer(user,many=True)
+        for data in serializer.data:
+              data_serializer=finalinfoserializer(data=data)
+              if data_serializer.is_valid():
+                     data_serializer.save()
+              else:
+                     return Response({'status':200,'message':'somthing is wrong'})
+        user.delete()
+        return Response({'status':200,'message':'success'})
+
+
+
+
+@api_view(['get'])
+def discharge(request,id):
+     user=finalinformation.objects.filter(id=id)
+     serializer=finalinfoserializer(user,many=True)
+     for data in serializer.data:
+          data_serializer=copyserializer(data=data)
+          if data_serializer.is_valid():
+                data_serializer.save()
+          else:
+               return Response({'status':200,'message':'somthing is wrong'})
+     user.delete()
+     return Response({'status':200,'message':'success'})
+
+
+@api_view(['get'])
+def finalinfo(request):
+     user=finalinformation.objects.all()
+     serializer=finalinfoserializer(user,many=True)
+     return Response({'status':200,'message':serializer.data})
+
 
     
 

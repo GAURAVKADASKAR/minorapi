@@ -12,7 +12,10 @@ urlpatterns = [
     path('viewhospital/',viewhospital.as_view()),
     path('viewrequest/',viewrequest.as_view()),
     path('get_hospital_by_id/<id>/',get_hospital_by_id),
+    path('reject/<id>/',rejectrequest),
+    path('select/<id>/',selectrequest),
     path('request_for_beds/',requst_for_beds.as_view()),
-    
+    path('discharge/<id>/',discharge),
+    path('viewpatient/',finalinfo),
     path('admin/', admin.site.urls),
 ]

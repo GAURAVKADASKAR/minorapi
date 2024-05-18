@@ -68,5 +68,20 @@ class hospital(serializers.ModelSerializer):
     class Meta:
         model=hospitalinfo
         fields="__all__"
+
+class copyserializer(serializers.ModelSerializer):
+    class Meta:
+        model=beds
+        fields='__all__'
+class finalinfoserializer(serializers.ModelSerializer):
+    class Meta:
+        model=finalinformation
+        fields="__all__"
+        
+
+
+        
+
+        
         
             
