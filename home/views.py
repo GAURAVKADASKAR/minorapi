@@ -31,7 +31,7 @@ class enter(APIView):
     def post(self,request):
         username=request.data['username']
         password=request.data['password']
-        user=authenticate(username=username,password=password)
+        user=authenticate(username=username,password=str(password))
         if user is None:
             return Response({'status':200,'message':'invlaid username and password'})
         request.session['username']=request.data['username']
