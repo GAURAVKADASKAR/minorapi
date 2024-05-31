@@ -74,7 +74,7 @@ class requst_for_beds(APIView):
         serializer.save()
         user.delete()
         return Response({'status':200,'message':'your request is sended to the hospital'})
-class viewbeds(ListAPIView):
+class filterbeds(ListAPIView):
     queryset=beds.objects.all()
     serializer_class=bedsserializer
     filter_backends=[filters.SearchFilter]
@@ -96,6 +96,13 @@ class viewrequest(ListAPIView):
 def get_hospital_by_id(request,id):
     user=hospitalinfo.objects.filter(id=id)
     serializer=hospitalinfoserializer(user,many=True)
+    return Response({'status':200,'message':serializer.data})
+
+@api_view(['get'])
+def view_beds(request,id):
+    data=hospitalinfo.objects.get(id=id).hospital_name
+    user=beds.objects.filter(Hospital_name=data)
+    serializer=bedsserializer(user,many=True)
     return Response({'status':200,'message':serializer.data})
 
 
