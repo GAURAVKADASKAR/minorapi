@@ -192,6 +192,14 @@ class Doctor_login(APIView):
                login_update_status=update_login(username,1)
                if (login_update_status=="successfull"): 
                     return Response({'status':200,'message':'login','login_user':request.session['login_user']})
+        
+# list of the available Doctor's
+@api_view(['get'])
+def Doctor_list(request):
+    obj=DoctorRegistration.objects.filter(login_status=1)
+    serializer=Doctorserializer(obj,many=True)
+    return Response({'statua':200,'message':serializer.data})
+
 
     
 
