@@ -99,6 +99,7 @@ class patient_info(models.Model):
     Policy_number=models.TextField()
     special_request=models.TextField()
 
+
 class finalinformation(models.Model):
     Hospital_name = models.CharField(max_length=300)
     Bed_id=models.CharField(max_length=300,unique=True)
@@ -149,6 +150,10 @@ class Doctor_slot(models.Model):
     def __str__(self):
         return self.slot_type
 
+class Booked_appointment(models.Model):
+    booked_slot=models.TextField()
+
+    
 
 
     

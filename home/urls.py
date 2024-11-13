@@ -22,5 +22,7 @@ urlpatterns = [
     path('doctorregisteration/',Doctor_registration.as_view()),
     path('Doctor_login/',Doctor_login.as_view()),
     path('Doctorlist/',Doctor_list),
-    path('Doctor_slot/',Doctor_slot_list_by_type.as_view())
+    path('Doctor_slot/',Doctor_slot_list_by_type.as_view()),
+    path('booked_slot/',Booked_slot.as_view()),
+    path('Available_slot/',Available_slot.as_view())
 ]

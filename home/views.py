@@ -28,6 +28,9 @@ class register(APIView):
         send_mail(subject,message,from_email,recipient_list)
         serializer.save()
         return Response({'status':200,'message':serializer.data})
+    
+
+# for login user
 class enter(APIView):
     def post(self,request):
         username=request.data['username']
@@ -39,6 +42,8 @@ class enter(APIView):
         request.session.set_expiry(30)
         print(request.session['username'])
         return Response({'status':200,'message':'login'})
+    
+# for profile
 class profile(APIView):
     def get(self,request):
         if request.session.has_key('username'):
@@ -49,7 +54,8 @@ class profile(APIView):
         else:
             return Response({'status':200,'message':'login required'})
         
-
+        
+# for feedback
 class feedback(APIView):
     def get(self,request):
         user=feed.objects.all()
@@ -65,7 +71,7 @@ class feedback(APIView):
 
 
     
-
+# For requesting the bed
 class requst_for_beds(APIView):
     def post(self,request):
         Bed_id=request.data['Bed_id']
@@ -78,6 +84,7 @@ class requst_for_beds(APIView):
         return Response({'status':200,'message':'your request is sended to the hospital'})
 
 
+# For filter the beds
 class filterbeds(ListAPIView):
     queryset=beds.objects.all()
     serializer_class=bedsserializer
@@ -85,13 +92,15 @@ class filterbeds(ListAPIView):
     search_fields=['Hospital_name','Bed_id','Ward_number','Room_number','Bed_type']
 
 
-    
+# For View Hospital 
 class viewhospital(ListAPIView):
     queryset=hospitalinfo.objects.all()
     serializer_class=hospitalinfoserializer
     filter_backends=[filters.SearchFilter]
     search_fields=['hospital_name','hospital_address','hospital_details']
 
+
+# For view Request
 class viewrequest(ListAPIView):
     queryset=patient_info.objects.all()
     serializer_class=patientrequestserializer
@@ -99,12 +108,17 @@ class viewrequest(ListAPIView):
     search_fields=['Hospital_name','Bed_id','Ward_number','Room_number','Disease','Bed_type','patient_name','patient_gender',
                    'patient_age','address','mobile_number','current_medication','allergies','past_surgeries','insurance_policy',
                    'Policy_number','special_request']
+
+
+# For view get hospital by there id
 @api_view(['get'])
 def get_hospital_by_id(request,id):
     user=hospitalinfo.objects.filter(id=id)
     serializer=hospitalinfoserializer(user,many=True)
     return Response({'status':200,'message':serializer.data})
 
+
+# for View the beds based on the provided id
 @api_view(['get'])
 def view_beds(request,id):
     try:
@@ -116,7 +130,7 @@ def view_beds(request,id):
         
     
 
-
+# For reject the request the patient request
 @api_view(['get'])
 def rejectrequest(request,id):
         user=patient_info.objects.filter(id=id)
@@ -129,6 +143,9 @@ def rejectrequest(request,id):
                      return Response({'status':200,'message':data_serializer.errors,'data':serializer.data})
         user.delete()
         return Response({'status':200,'message':'success','data':serializer.data})
+
+
+# For Accept the request of the patient
 @api_view(['get'])
 def selectrequest(request,id):
         user=patient_info.objects.filter(id=id)
@@ -144,7 +161,7 @@ def selectrequest(request,id):
 
 
 
-
+# For Dischsrge the patient
 @api_view(['get'])
 def discharge(request,id):
      user=finalinformation.objects.filter(id=id)
@@ -159,14 +176,16 @@ def discharge(request,id):
      return Response({'status':200,'message':'success'})
 
 
+# For Display the accepted patient's 
 @api_view(['get'])
 def finalinfo(request):
      user=finalinformation.objects.all()
      serializer=finalinfoserializer(user,many=True)
      return Response({'status':200,'message':serializer.data})
 
-# Doctor's registration View
 
+
+# Doctor's registration View
 class Doctor_registration(APIView):
     
      def post(self,request):
@@ -177,8 +196,9 @@ class Doctor_registration(APIView):
         serializer.save()
         return Response({'status':200,'message':serializer.data})
 
-# For Doctor's Login
 
+
+# For Doctor's Login
 class Doctor_login(APIView):
      
      def post(self,request):
@@ -192,7 +212,9 @@ class Doctor_login(APIView):
                login_update_status=update_login(username,1)
                if (login_update_status=="successfull"): 
                     return Response({'status':200,'message':'login','login_user':request.session['login_user']})
-        
+
+
+
 # list of the available Doctor's
 @api_view(['get'])
 def Doctor_list(request):
@@ -200,12 +222,34 @@ def Doctor_list(request):
     serializer=Doctorserializer(obj,many=True)
     return Response({'statua':200,'message':serializer.data})
 
+
+# for Doctor_slot based on the Slot_type(morning , night.....)
 class Doctor_slot_list_by_type(APIView):
      def post(self,request):
         slot_type=request.data['slot_type']
         obj=Doctor_slot.objects.filter(slot_type=slot_type)
         serializer=Doctor_slot_serializer(obj,many=True)
         return Response({'status':200,'message':serializer.data})
+    
+
+# For dispaly the Booked slot's
+class Booked_slot(APIView):
+     def post(self,request):
+            slot=request.data['slot']
+            obj=Booked_appointment.objects.filter(booked_slot=slot)
+            serializer=Bookedserializer(obj,many=True)
+            return Response({'status':200,'message':serializer.data})
+     
+    
+# For Display the Available slot
+class Available_slot(APIView):
+     def post(self,request):
+          slot=request.data['slot']
+          obj=Booked_appointment.objects.get(booked_slot=slot).booked_slot
+          available_slots=Doctor_slot.objects.exclude(slot_duration=obj)
+          serializer=Doctor_slot_serializer(available_slots,many=True)
+          return Response({'status':200,'message':serializer.data})
+
 
 
     

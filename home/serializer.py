@@ -117,6 +117,15 @@ class Doctor_slot_serializer(serializers.ModelSerializer):
         model=Doctor_slot
         fields="__all__"
     
+
+# Serializer for booked appointment
+
+class Bookedserializer(serializers.ModelSerializer):
+    class Meta:
+        model=Booked_appointment
+        fields="__all__"
+
+        
     
 
         
