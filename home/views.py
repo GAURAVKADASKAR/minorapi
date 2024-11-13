@@ -200,6 +200,13 @@ def Doctor_list(request):
     serializer=Doctorserializer(obj,many=True)
     return Response({'statua':200,'message':serializer.data})
 
+class Doctor_slot_list_by_type(APIView):
+     def post(self,request):
+        slot_type=request.data['slot_type']
+        obj=Doctor_slot.objects.filter(slot_type=slot_type)
+        serializer=Doctor_slot_serializer(obj,many=True)
+        return Response({'status':200,'message':serializer.data})
+
 
     
 

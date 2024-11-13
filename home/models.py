@@ -139,6 +139,15 @@ class DoctorRegistration(models.Model):
     # license=models.FileField(upload_to="Doctor_licence")
     def __str__(self):
         return self.full_name
+    
+    
+# Doctor's appointment slot model
+class Doctor_slot(models.Model):
+    slot_type=models.CharField(max_length=200)
+    slot_duration=models.TextField()
+
+    def __str__(self):
+        return self.slot_type
 
 
 

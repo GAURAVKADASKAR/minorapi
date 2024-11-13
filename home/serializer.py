@@ -109,6 +109,16 @@ class Doctorserializer(serializers.ModelSerializer):
         )
         obj.save()
         return validated_data
+
+
+#  serializer for the Doctor's slot]
+class Doctor_slot_serializer(serializers.ModelSerializer):
+    class Meta:
+        model=Doctor_slot
+        fields="__all__"
+    
+    
+
         
 
 
