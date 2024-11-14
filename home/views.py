@@ -11,6 +11,7 @@ from home.models import *
 from rest_framework import filters
 from rest_framework.generics import ListAPIView
 from home.login_update import update_login
+from rest_framework import status
 
 
 # Create your views here.
@@ -235,8 +236,7 @@ class Doctor_slot_list_by_type(APIView):
 # For dispaly the Booked slot's
 class Booked_slot(APIView):
      def post(self,request):
-            slot=request.data['slot']
-            obj=Booked_appointment.objects.filter(booked_slot=slot)
+            obj=Booked_appointment.objects.all()
             serializer=Bookedserializer(obj,many=True)
             return Response({'status':200,'message':serializer.data})
      
@@ -245,10 +245,17 @@ class Booked_slot(APIView):
 class Available_slot(APIView):
      def post(self,request):
           slot=request.data['slot']
-          obj=Booked_appointment.objects.get(booked_slot=slot).booked_slot
-          available_slots=Doctor_slot.objects.exclude(slot_duration=obj)
-          serializer=Doctor_slot_serializer(available_slots,many=True)
-          return Response({'status':200,'message':serializer.data})
+          slot_date=request.data['slot_date']
+          try:
+            obj=Booked_appointment.objects.get(booked_slot=slot,appointment_date=slot_date)
+            available_slots=Doctor_slot.objects.exclude(slot_duration=obj.booked_slot)
+            serializer=Doctor_slot_serializer(available_slots,many=True)
+            return Response({'status':200,'message':serializer.data})
+          except Booked_appointment.DoesNotExist:
+            obj1=Doctor_slot.objects.all()
+            serializer=Doctor_slot_serializer(obj1,many=True)
+            return Response({'status':status.HTTP_200_OK,'message':serializer.data})
+          
 
 
 

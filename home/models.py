@@ -151,6 +151,7 @@ class Doctor_slot(models.Model):
         return self.slot_type
 
 class Booked_appointment(models.Model):
+    appointment_date=models.DateField()
     booked_slot=models.TextField()
 
     
