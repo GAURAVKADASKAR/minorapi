@@ -36,16 +36,19 @@ class enter(APIView):
     def post(self,request):
         username=request.data['username']
         password=request.data['password']
+        obj_id=registration.objects.get(email=username)
         user=authenticate(username=username,password=str(password))
         if user is None:
             return Response({'status':200,'message':'invlaid username and password'})
         request.session['username']=request.data['username']
-        request.session.set_expiry(30)
+        request.session['user_id']=obj_id.id
+        # request.session.set_expiry(30)
         print(request.session['username'])
         return Response({'status':200,'message':'login'})
     
 # for profile
 class profile(APIView):
+
     def get(self,request):
         if request.session.has_key('username'):
             user=request.session['username']
@@ -236,7 +239,7 @@ class Doctor_slot_list_by_type(APIView):
 # For dispaly the Booked slot's
 class Booked_slot(APIView):
      def post(self,request):
-            obj=Booked_appointment.objects.all()
+            obj=Appointment.objects.all()
             serializer=Bookedserializer(obj,many=True)
             return Response({'status':200,'message':serializer.data})
      
@@ -247,14 +250,50 @@ class Available_slot(APIView):
           slot=request.data['slot']
           slot_date=request.data['slot_date']
           try:
-            obj=Booked_appointment.objects.get(booked_slot=slot,appointment_date=slot_date)
-            available_slots=Doctor_slot.objects.exclude(slot_duration=obj.booked_slot)
+            obj=booking_status.objects.filter(booked_slot=slot,appointment_date=slot_date)
+            booked_appoint=obj.values_list('booked_slot',flat=True)
+            available_slots=Doctor_slot.objects.exclude(slot_duration__in=booked_appoint)
             serializer=Doctor_slot_serializer(available_slots,many=True)
             return Response({'status':200,'message':serializer.data})
-          except Booked_appointment.DoesNotExist:
+          except Appointment.DoesNotExist:
             obj1=Doctor_slot.objects.all()
             serializer=Doctor_slot_serializer(obj1,many=True)
             return Response({'status':status.HTTP_200_OK,'message':serializer.data})
+    
+class Available_slot_by_date(APIView):
+    def post(self,request):
+        
+        slot_date=request.data['slot_date']
+        try:
+            booked_slot=Appointment.objects.filter(appointment_date=slot_date)
+            booked_slot_by_date=booked_slot.values_list('booked_slot',flat=True)
+            Available_slot=Doctor_slot.objects.exclude(slot_duration__in=booked_slot_by_date)
+            serializer=Doctor_slot_serializer(Available_slot,many=True)
+            return Response({'status':status.HTTP_200_OK,'data':serializer.data})
+        except Appointment.DoesNotExist:
+            obj1=Doctor_slot.objects.all()
+            serializer=Doctor_slot_serializer(obj1,many=True)
+            return Response({'status':status.HTTP_200_OK,'message':serializer.data})
+        
+    
+class requestforappointment(APIView):
+     def post(self,request):
+          if request.session.has_key('username') and request.session.has_key('user_id'):
+               user_name=request.session['username']
+               user_id=request.session['user_id']
+               data = request.data.copy()
+               data['user_name'] = user_name
+               data['user_id'] = user_id
+               serializer=Bookedserializer(data=data)
+               if not serializer.is_valid():
+                    return Response({'status':status.HTTP_400_BAD_REQUEST,'error':serializer.errors})
+               serializer.save()
+               return Response({'status':status.HTTP_200_OK,'message':'success'})
+
+    
+
+
+
           
 
 

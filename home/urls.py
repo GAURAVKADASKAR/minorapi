@@ -24,5 +24,7 @@ urlpatterns = [
     path('Doctorlist/',Doctor_list),
     path('Doctor_slot/',Doctor_slot_list_by_type.as_view()),
     path('booked_slot/',Booked_slot.as_view()),
-    path('Available_slot/',Available_slot.as_view())
+    path('Available_slot/',Available_slot.as_view()),
+    path('Available_slot_by_date/',Available_slot_by_date.as_view()),
+    path('requestforappointment/',requestforappointment.as_view())
 ]

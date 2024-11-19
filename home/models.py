@@ -150,9 +150,30 @@ class Doctor_slot(models.Model):
     def __str__(self):
         return self.slot_type
 
-class Booked_appointment(models.Model):
+class booking_status(models.Model):
     appointment_date=models.DateField()
     booked_slot=models.TextField()
+
+    
+
+class Appointment(models.Model):
+    user_name = models.CharField(max_length=200)
+    user_id=models.PositiveIntegerField()
+    Doctor_id=models.PositiveIntegerField()
+    doctor_name= models.CharField(max_length=200)
+    booked_slot = models.CharField(max_length=50)
+    appointment_date = models.DateField()
+    status = models.CharField(max_length=20, default='Pending')
+    purpose = models.TextField()
+    notes = models.TextField(blank=True, null=True)
+    payment_status = models.CharField(max_length=20, default='Pending')
+    is_virtual = models.BooleanField(default=True)
+    meeting_link = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user_name} - {self.doctor_name}"
 
     
 

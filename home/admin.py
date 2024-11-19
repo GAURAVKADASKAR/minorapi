@@ -11,7 +11,8 @@ admin.site.register(patient_info)
 admin.site.register(finalinformation)
 admin.site.register(DoctorRegistration)
 admin.site.register(Doctor_slot)
-admin.site.register(Booked_appointment)
+admin.site.register(booking_status)
+admin.site.register(Appointment)
 
 
 
