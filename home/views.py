@@ -42,6 +42,7 @@ class enter(APIView):
             return Response({'status':200,'message':'invlaid username and password'})
         request.session['username']=request.data['username']
         request.session['user_id']=obj_id.id
+        request.session['user_type']='Normal'
         # request.session.set_expiry(30)
         print(request.session['username'])
         return Response({'status':200,'message':'login'})
@@ -212,10 +213,13 @@ class Doctor_login(APIView):
           if obj is None:
                return Response({'status':404,'message':"invalid credentials"})
           else:
-               request.session['login_user']=username
+               obj=DoctorRegistration.objects.get(email=username)
+               request.session['username']=username
+               request.session['user_id']=obj.id
+               request.session['user_type']='Doctor'
                login_update_status=update_login(username,1)
                if (login_update_status=="successfull"): 
-                    return Response({'status':200,'message':'login','login_user':request.session['login_user']})
+                    return Response({'status':200,'message':'login','login_user':request.session['username']})
 
 
 
@@ -224,7 +228,7 @@ class Doctor_login(APIView):
 def Doctor_list(request):
     obj=DoctorRegistration.objects.filter(login_status=1)
     serializer=Doctorserializer(obj,many=True)
-    return Response({'statua':200,'message':serializer.data})
+    return Response({'statua':status.HTTP_200_OK,'message':serializer.data})
 
 
 # for Doctor_slot based on the Slot_type(morning , night.....)
@@ -289,6 +293,27 @@ class requestforappointment(APIView):
                     return Response({'status':status.HTTP_400_BAD_REQUEST,'error':serializer.errors})
                serializer.save()
                return Response({'status':status.HTTP_200_OK,'message':'success'})
+        
+# for display the appointment status to the user as well as doctor's
+
+class appointment_status(APIView):
+     def get(self,request):
+         
+        if request.session.has_key('user_id') and  request.session.has_key('user_type'):
+                user_type=request.session['user_type']  
+                user_id=request.session['user_id']
+                if user_type=='Normal':
+                    obj_user=Appointment.objects.filter(user_id=user_id)
+                    serializer_user=Bookedserializer(obj_user,many=True,fields=['user_name','doctor_name','booked_slot','appointment_date','status','payment_status'])
+                    return Response({'status':status.HTTP_200_OK,'message':serializer_user.data})
+                elif user_type=='Doctor':
+                     obj_doctor=Appointment.objects.filter(Doctor_id=user_id)
+                     serializer_doctor=Bookedserializer(obj_doctor,many=True,fields=['user_name','booked_slot','appointment_date','purpose','notes','status','payment_status'])
+                     return Response({'status':status.HTTP_200_OK,'message':serializer_doctor.data})
+        
+        else:
+            return Response({'status':status.HTTP_400_BAD_REQUEST,'error':'login required'})
+
 
     
 
